@@ -42,6 +42,8 @@ class CL:
         program = """__kernel void worker(__global float* data1, __global float* data2, __global float* result)
         {
             unsigned int i = get_global_id(0);
+            float d1 = data1[i];
+            float d2 = data2[i];
         """
 
         # Generate n calculations
@@ -49,7 +51,7 @@ class CL:
             # This is just a series of nonsenscial operations to get an idea of
             #   what performance might look like. Our calculations will involve
             #   less operations
-            program += """result[i] = data1[i] * data2[i] + (0.05 * data1[i]) * (1.08 / data2[i]) * (0.02 * (0.0485 * data1[i])) + ((data1[i] / data2[i]) + (0.02 * 0.02 * 0.02 * data1[i])) - (data2[i] / 2);
+            program += """result[i] = d1 * d2 + (0.05 * d1) * (1.08 / d2) * (0.02 * (0.0485 * d2)) + ((d1 / d2) + (0.02 * 0.02 * 0.02 * d1)) - (d2 / 2);
             """
 
         program += "}" 
