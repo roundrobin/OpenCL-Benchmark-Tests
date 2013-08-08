@@ -13,4 +13,6 @@ To run, run `test.py` in the PyOpenCL. It takes two arguments: number of records
 
 Note: We don't care about how long it takes to create the numpy arrays - in our usecase, we'll be setting it up once and leaving it in memory, calling execute whenever a request comes in.
 
-** Shoutout to @enjalot for his [OpenCL tutorials](http://enja.org/opencl/) **
+
+## Notes / Credit ##
+Shoutout to @enjalot for his [OpenCL tutorials](http://enja.org/opencl/), as well his [timing decorator code](https://github.com/enjalot/pyfers)
