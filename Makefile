@@ -38,16 +38,16 @@ test-pyopencl-gpu-no-ctx:
 #CPU Tests - assumes cpu is context 0
 #If this isn't the case, run `make test-pyopencl-cpu-no-ctx`
 test-pyopencl-cpu:
-	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST1)
-	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST2)
-	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST3)
-	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST4)
+	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST1) cpu
+	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST2) cpu
+	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST3) cpu
+	@export PYOPENCL_CTX=0 && python PyOpenCL/test.py $(TEST4) cpu
 
 test-pyopencl-cpu-no-ctx:
-	@python PyOpenCL/test.py $(TEST1)
-	@python PyOpenCL/test.py $(TEST2)
-	@python PyOpenCL/test.py $(TEST3)
-	@python PyOpenCL/test.py $(TEST4)
+	@python PyOpenCL/test.py $(TEST1) cpu
+	@python PyOpenCL/test.py $(TEST2) cpu
+	@python PyOpenCL/test.py $(TEST3) cpu
+	@python PyOpenCL/test.py $(TEST4) cpu
 
 # PyPy
 # ---------------------------------------
@@ -60,4 +60,4 @@ test-pypy:
 # Util
 # ---------------------------------------
 clear-data:
-	@echo "name,time,records,calculations\n" > data.csv
+	@echo "name,time,records,calculations" > data.csv
