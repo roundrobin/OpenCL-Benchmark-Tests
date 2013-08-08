@@ -3,8 +3,8 @@
 #
 #See individual targets for detailed info
 
-all: test-pyopencl-gpu test-pypy
-cpu: test-pyopencl-cpu test-pypy
+all: clear-data test-pyopencl-gpu test-pypy
+cpu: clear-data test-pyopencl-cpu test-pypy
 
 # PyOpenCL
 # ---------------------------------------
@@ -48,6 +48,6 @@ test-pypy:
 
 # Util
 # ---------------------------------------
-clear:
+clear-data:
 	# Empty data file
-	@echo "" > data.csv
+	@echo "name,time,records,calculations\n" > data.csv
