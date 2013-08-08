@@ -23,6 +23,7 @@ test-pyopencl-gpu-no-ctx:
 	@python PyOpenCL/test.py 4000000 100
 	@python PyOpenCL/test.py 4000000 30
 
+# CPU Tests with OpenCL
 test-pyopencl-cpu:
 	# CPU Tests - assumes cpu is context 0
 	#	If this isn't the case, run `make test-pyopencl-cpu-no-ctx`
