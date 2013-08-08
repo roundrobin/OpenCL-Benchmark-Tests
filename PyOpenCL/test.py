@@ -45,7 +45,7 @@ class CL:
         """
 
         # Generate n calculations
-        for i in range(num_calculations):
+        for i in xrange(num_calculations):
             # This is just a series of nonsenscial operations to get an idea of
             #   what performance might look like. Our calculations will involve
             #   less operations
@@ -65,8 +65,8 @@ class CL:
         #initialize client side (CPU) arrays
         start = datetime.datetime.now()
         print 'Setting up data arrays'
-        self.data1 = numpy.array(range(records), dtype=numpy.float32)
-        self.data2 = numpy.array(range(records), dtype=numpy.float32)
+        self.data1 = numpy.array(xrange(records), dtype=numpy.float32)
+        self.data2 = numpy.array(xrange(records), dtype=numpy.float32)
         print 'Done setting up two numpy arrays in %s' % (datetime.datetime.now() - start)
 
         start = datetime.datetime.now()
