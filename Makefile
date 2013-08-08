@@ -7,10 +7,10 @@
 # ---------------------------------------
 # first param is num_records (how many iterations to do / rows)
 # second param is how may calculations to do for each record
-TEST1 = 40000000 100
-TEST2 = 40000000 30
-TEST3 = 4000000 100
-TEST4 = 4000000 30
+TEST1 = 40000000 100 1
+TEST2 = 40000000 30 1
+TEST3 = 4000000 100 1
+TEST4 = 4000000 30 1
 
 
 # Start er up

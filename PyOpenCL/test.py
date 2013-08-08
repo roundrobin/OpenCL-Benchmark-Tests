@@ -3,13 +3,13 @@ import numpy
 import datetime
 import sys
 
-#Number of records to use
-records = 4000000
+#Number of num_records to use
+num_records = 4000000
 try:
-    records = int(sys.argv[1])
+    num_records = int(sys.argv[1])
 except IndexError:
     pass
-print 'Testing with %s records' % records
+print 'Testing with %s num_records' % num_records
 
 #Number of calculations to use
 num_calculations = 100
@@ -19,10 +19,17 @@ except IndexError:
     pass
 print 'Testing with %s calculations' %  num_calculations
 
+#Number of iterations
+num_iterations = 1
+try:
+    num_iterations = int(sys.argv[3])
+except IndexError:
+    pass
+
 #Type (CPU or GPU)
 process_type = 'GPU'
 try:
-    process_type = sys.argv[3]
+    process_type = sys.argv[4]
 except IndexError:
     pass
 print 'Testing on %s' %  process_type
@@ -67,8 +74,8 @@ class CL:
         #initialize client side (CPU) arrays
         start = datetime.datetime.now()
         print 'Setting up data arrays'
-        self.data1 = numpy.array(xrange(records), dtype=numpy.float32)
-        self.data2 = numpy.array(xrange(records), dtype=numpy.float32)
+        self.data1 = numpy.array(xrange(num_records), dtype=numpy.float32)
+        self.data2 = numpy.array(xrange(num_records), dtype=numpy.float32)
         print 'Done setting up two numpy arrays in %s' % (datetime.datetime.now() - start)
 
         start = datetime.datetime.now()
@@ -85,7 +92,6 @@ class CL:
         performance
         '''
         start = datetime.datetime.now()
-        print '>>>>>>>>>>> Exceuting...'
         self.program.worker(self.queue, self.data1.shape, None, self.data1_buf, self.data2_buf, self.dest_buf)
         # Get an empty numpy array in the shape of the original data
         result = numpy.empty_like(self.data1)
@@ -99,7 +105,7 @@ class CL:
         import os
         data_file = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../data.csv'), 'a')
         data_file.write('PyOpenCl %s,%s,%s,%s\n' % (
-            process_type, finish, records, num_calculations
+            process_type, finish, num_records, num_calculations
         ))
         data_file.close()
 
@@ -107,4 +113,7 @@ if __name__ == "__main__":
     example = CL()
     example.loadProgram()
     example.setupBuffers()
-    example.execute()
+
+    for i in xrange(num_iterations):
+        print '>>> Exceuting... (%s of %s)' % (i+1, num_iterations)
+        example.execute()
