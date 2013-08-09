@@ -2,8 +2,6 @@ import pyopencl as cl
 import numpy
 import sys
 import os
-import locale
-locale.setlocale(locale.LC_ALL, 'en_US')
 
 from util import timing
 
@@ -147,7 +145,7 @@ if __name__ == "__main__":
     avg = (timer['total'] ) / timer['count']
 
     print 'DONE with PyOpenCL tests. %s records | %s calculations each' % (
-        locale.format("%d", num_records, grouping=True),
+        num_records, 
         num_calculations,
     )
     print 'Average time for execute: %s milliseconds | (%s seconds)' % (avg, avg / 1000)
