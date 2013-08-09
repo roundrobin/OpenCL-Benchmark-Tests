@@ -149,3 +149,10 @@ if __name__ == "__main__":
         num_calculations,
     )
     print 'Average time for execute: %s milliseconds | (%s seconds)' % (avg, avg / 1000)
+
+    #Open data file to append to
+    data_file = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../data_averages.csv'), 'a')
+    data_file.write('PyOpenCl %s,%s,%s,%s\n' % (
+        process_type, avg, num_records, num_calculations,
+    ))
+    data_file.close()
