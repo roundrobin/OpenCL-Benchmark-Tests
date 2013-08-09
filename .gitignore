@@ -3,3 +3,4 @@
 *.swp
 .DS_Store
 data.csv
+data_averages.csv
