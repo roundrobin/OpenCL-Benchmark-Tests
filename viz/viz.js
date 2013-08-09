@@ -130,6 +130,11 @@ var drawChart = function(){
 
     // Get data by name
     data = _.groupBy(data, function(d){ return d.name; });
+
+    ////TEST: To show only certain items:
+    //delete data['PyPy Numpy'];
+    //delete data['NodeJS'];
+
     var flatData = _.flatten(_.values(data));
 
     // update scales
