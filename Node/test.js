@@ -41,7 +41,7 @@ var finish = (new Date() - start);
 console.log('Done in ' + finish + ' ms');
 
 // Write to file
-fs.appendFile(__dirname + '../data.csv', 
+fs.appendFile(__dirname + '/../data.csv', 
     'NodeJS,' + finish + ',' + numRecords + ',' + numCalculations + '\n', 
     function (err) { 
         console.log('Wrote to data.csv');
