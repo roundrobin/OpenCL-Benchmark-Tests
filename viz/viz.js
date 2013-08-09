@@ -148,7 +148,6 @@ var drawChart = function(){
 
     // lines lines
     var line = d3.svg.line()
-        .interpolate('basis')
         .x(function(d) { return xScale(d.x); })
         .y(function(d) { return yScale(d.y); });
 
@@ -190,13 +189,14 @@ var drawChart = function(){
     });
 
     //update acceptable line
+    var acceptableTime = 3500;
     acceptableLine.transition().attr({
-        y1: yScale( 4000 ),
-        y2: yScale( 4000 )
+        y1: yScale( acceptableTime ),
+        y2: yScale( acceptableTime )
     });
     unacceptable.transition().attr({
         y: 0,
-        height: yScale( 4000 )
+        height: yScale( acceptableTime )
     });
 
 };
