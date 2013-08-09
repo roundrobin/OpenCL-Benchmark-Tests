@@ -1,8 +1,14 @@
 import pyopencl as cl
 import numpy
-import datetime
 import sys
+import os
+import locale
+locale.setlocale(locale.LC_ALL, 'en_US')
 
+from util import timing
+
+# User input
+# ---------------------------------------
 #Number of num_records to use
 num_records = 4000000
 try:
@@ -34,18 +40,22 @@ except IndexError:
     pass
 print 'Testing on %s' %  process_type
 
+# Setup OpenCL test
+# ---------------------------------------
 class CL:
     def __init__(self):
         self.ctx = cl.create_some_context()
         self.queue = cl.CommandQueue(self.ctx)
 
-    def loadProgram(self):
+    def load_program(self):
+        ''' Load or create a .cl program to use
+        '''
         ##Could read program from file:
         #   (also, accept filename as a parameter)
         #f = open(filename, 'r')
         #fstr = "".join(f.readlines())
 
-        #Generate it
+        #Generate a .cl program
         program = """__kernel void worker(__global float* data1, __global float* data2, __global float* result)
         {
             unsigned int i = get_global_id(0);
@@ -66,54 +76,78 @@ class CL:
         #create the program
         self.program = cl.Program(self.ctx, program).build()
 
-    def setupBuffers(self):
+    def setup_buffers(self):
         #Here we set up the data arrays and buffers. This is NOT counted
         #   in the performance metrics, as on the server this would only need
         #   to happen once
 
         #initialize client side (CPU) arrays
-        start = datetime.datetime.now()
+        timing.timings.start('buffer')
         print 'Setting up data arrays'
         self.data1 = numpy.array(xrange(num_records), dtype=numpy.float32)
         self.data2 = numpy.array(xrange(num_records), dtype=numpy.float32)
-        print 'Done setting up two numpy arrays in %s' % (datetime.datetime.now() - start)
+        timing.timings.stop('buffer')
+        print 'Done setting up two numpy arrays in %s ms | (%s seconds)' % (
+            timing.timings.timings['buffer']['timings'][-1],
+            timing.timings.timings['buffer']['timings'][-1] / 1000
+        )
 
-        start = datetime.datetime.now()
-        mf = cl.mem_flags
         #create OpenCL buffers
+        timing.timings.start('buffer')
+
+        mf = cl.mem_flags
         self.data1_buf = cl.Buffer(self.ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=self.data1)
         self.data2_buf = cl.Buffer(self.ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=self.data2)
         self.dest_buf = cl.Buffer(self.ctx, mf.WRITE_ONLY, self.data2.nbytes)
-        print 'Done setting up buffers in %s' % (datetime.datetime.now() - start)
+        timing.timings.stop('buffer')
+        print 'Done setting up buffers in %s ms' % (
+            timing.timings.timings['buffer']['timings'][-1]
+        )
 
     def execute(self):
         ''' This handles the actual execution for the processing, which would
         get executed on each request - this is where we care about the
         performance
         '''
-        start = datetime.datetime.now()
+        timing.timings.start('execute')
+
+        # Start the program
         self.program.worker(self.queue, self.data1.shape, None, self.data1_buf, self.data2_buf, self.dest_buf)
+
         # Get an empty numpy array in the shape of the original data
         result = numpy.empty_like(self.data1)
+
+        #Wait for result
         cl.enqueue_read_buffer(self.queue, self.dest_buf, result).wait()
-        finish = datetime.datetime.now() - start
-        print 'DONE in ::::::::: %s ::::::::' % (finish)
-        print 'Result: ', result
-        print '%s items' % len(result)
+
+        #show timing info
+        timing.timings.stop('execute')
+        finish = timing.timings.timings['execute']['timings'][-1]
+        print '<<< DONE in %s' % (finish)
 
         #Open data file to append to
-        import os
         data_file = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../data.csv'), 'a')
         data_file.write('PyOpenCl %s,%s,%s,%s\n' % (
-            process_type, finish, num_records, num_calculations
+            process_type, finish, num_records, num_calculations,
         ))
         data_file.close()
 
+# Execute it
+# ---------------------------------------
 if __name__ == "__main__":
     example = CL()
-    example.loadProgram()
-    example.setupBuffers()
+    example.load_program()
+    example.setup_buffers()
 
     for i in xrange(num_iterations):
         print '>>> Exceuting... (%s of %s)' % (i+1, num_iterations)
         example.execute()
+
+    timer = timing.timings.timings['execute']
+    avg = (timer['total'] ) / timer['count']
+
+    print 'DONE with PyOpenCL tests. %s records | %s calculations each' % (
+        locale.format("%d", num_records, grouping=True),
+        num_calculations,
+    )
+    print 'Average time for execute: %s milliseconds | (%s seconds)' % (avg, avg / 1000)
