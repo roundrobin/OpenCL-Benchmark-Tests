@@ -112,11 +112,16 @@ var unacceptable = lowerElements.append('rect')
     });
 
 
-var z;
+var data;
 // --------------------------------------
 // Draw chart
 // --------------------------------------
-d3.csv('data_example_averages.csv', function(data){
+d3.csv('data_example_averages.csv', function(d){
+    data = d;
+    drawChart();
+});
+
+var drawChart = function(){
     // Update data
     _.each(data, function(d){
         d.x = +d.records;
@@ -138,6 +143,7 @@ d3.csv('data_example_averages.csv', function(data){
 
     // lines lines
     var line = d3.svg.line()
+        .interpolate('basis')
         .x(function(d) { return xScale(d.x); })
         .y(function(d) { return yScale(d.y); });
 
@@ -188,4 +194,4 @@ d3.csv('data_example_averages.csv', function(data){
         height: yScale( 4000 )
     });
 
-});
+};

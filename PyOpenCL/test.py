@@ -1,5 +1,6 @@
 import pyopencl as cl
 import numpy
+import random
 import sys
 import os
 
@@ -66,8 +67,15 @@ class CL:
             # This is just a series of nonsenscial operations to get an idea of
             #   what performance might look like. Our calculations will involve
             #   less operations
-            program += """result[i] = d1 * d2 + (0.05 * d1) * (1.08 / d2) * (0.02 * (0.0485 * d2)) + ((d1 / d2) + (0.02 * 0.02 * 0.02 * d1)) - (d2 / 2);
-            """
+            program += """result[i] = d%s * d%s + (%s * d1) * (1.08 / d2) * (%s * (0.0485 * d2)) + ((d1 / d2) + (%s * 0.02 * %s * d1)) - (d2 / 2);
+            """ % (
+                random.randint(1,2),
+                random.randint(1,2),
+                random.random(),
+                random.random(),
+                random.random(),
+                random.random(),
+            )
 
         program += "}" 
 
