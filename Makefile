@@ -15,8 +15,8 @@ TEST4 = 4000000 30 1
 
 # Start er up
 # ---------------------------------------
-all: clear-data test-pyopencl-gpu test-pypy
-cpu: clear-data test-pyopencl-cpu test-pypy
+all: clear-data test-pyopencl-gpu test-pypy test-node
+cpu: clear-data test-pyopencl-cpu test-pypy test-node
 
 # PyOpenCL
 # ---------------------------------------
@@ -56,6 +56,14 @@ test-pypy:
 	@pypy PyPy/test.py $(TEST2)
 	@pypy PyPy/test.py $(TEST3)
 	@pypy PyPy/test.py $(TEST4)
+
+# Node
+# ---------------------------------------
+test-node:
+	@node Node/test.js $(TEST1)
+	@node Node/test.js $(TEST2)
+	@node Node/test.js $(TEST3)
+	@node Node/test.js $(TEST4)
 
 # Util
 # ---------------------------------------

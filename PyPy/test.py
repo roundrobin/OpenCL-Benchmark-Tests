@@ -56,12 +56,13 @@ for i in xrange(records):
         dummy = data1[i] * data2[i] + (0.05 * data1[i]) * (1.08 / data2[i]) * (0.02 * (0.0485 * data1[i])) + ((data1[i] / data2[i]) + (0.02 * 0.02 * 0.02 * data1[i])) - (data2[i] / 2)
 
 speeds.append(datetime.datetime.now() - start)
-print '<<< Done: %s' % (speeds[-1])
+finish = speeds[-1].total_seconds() * 1000
+print '<<< Done: %s' % (finish)
 
 # Write to file
 import os
 data_file = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../data.csv'), 'a')
 data_file.write('PyPy Numpy,%s,%s,%s\n' % (
-    speeds[-1], records, num_calculations
+    finish, records, num_calculations
 ))
 data_file.close()
