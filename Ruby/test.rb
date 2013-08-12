@@ -1,3 +1,5 @@
+#Designed for ruby 1.9.2
+
 require "date"
 
 records = 4000000
